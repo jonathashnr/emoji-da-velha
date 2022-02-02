@@ -1,25 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Start from './components/Start';
+import Game from './components/Game';
+import GlobalStyles from './components/styles/GlobalStyles';
+import AppStyles from './components/styles/App.styled';
+import { createContext } from "react";
 
-function App() {
+export interface Player {
+  name: string;
+  emoji: string;
+}
+export interface PlayersContextType {
+  player1: Player;
+  player2: Player;
+  setPlayer1: React.Dispatch<React.SetStateAction<Player>>
+  setPlayer2: React.Dispatch<React.SetStateAction<Player>>
+  setHasStarted: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const PlayersContext = createContext<PlayersContextType>({} as PlayersContextType);
+
+const App: React.FC = () => {
+  const [player1, setPlayer1] = useState<Player>({ name: 'Jogador 1', emoji: '❌' })
+  const [player2, setPlayer2] = useState<Player>({ name: 'Jogador 2', emoji: '⭕' })
+  const [hasStarted, setHasStarted] = useState<boolean>(true);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PlayersContext.Provider
+      value={{
+        player1,
+        player2,
+        setPlayer1,
+        setPlayer2,
+        setHasStarted,
+      }}
+    >
+      <GlobalStyles />
+      <AppStyles>
+        {hasStarted ? <Game /> : <Start />}
+      </AppStyles>
+    </PlayersContext.Provider>
   );
 }
 
