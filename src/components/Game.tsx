@@ -64,7 +64,7 @@ const Game = () => {
     const createHoverGameView = (hoverIdx: number, styles: object) => {
         const phamtomEmoji = isP1Turn ? player1.emoji : player2.emoji;
         return gameView.map((cel, i) => {
-            return hoverIdx != i ? cel : { ...cel, emoji: phamtomEmoji, style: styles }
+            return hoverIdx !== i ? cel : { ...cel, emoji: phamtomEmoji, style: styles }
         })
     }
     const createVictoryView = ([i1, i2, i3]: number[]) => {
@@ -79,7 +79,7 @@ const Game = () => {
     const createDrawView = () => {
         return createGameView().map((cel) => ({ ...cel, className: 'pulsar',style: { opacity: '0.3' }}))
     }
-    
+
     const handleCelClick = (index: number) => {
         if (!gameArr[index]) {
             const newArr = [...gameArr];
