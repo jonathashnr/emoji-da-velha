@@ -4,7 +4,7 @@ const StartStyled = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 40%;
+    width: 30%;
     min-width: 22rem;
     #forms {
         padding: 0 1rem;

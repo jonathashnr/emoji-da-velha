@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const GameStyles = styled.div`
-width: 40%;
+width: 30%;
 min-width: 20rem;
 display: flex;
 flex-direction: column;
