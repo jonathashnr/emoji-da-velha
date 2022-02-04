@@ -19,9 +19,9 @@ export interface PlayersContextType {
 export const PlayersContext = createContext<PlayersContextType>({} as PlayersContextType);
 
 const App: React.FC = () => {
-  const [player1, setPlayer1] = useState<Player>({ name: 'Jogador 1', emoji: '❌' })
-  const [player2, setPlayer2] = useState<Player>({ name: 'Jogador 2', emoji: '⭕' })
-  const [hasStarted, setHasStarted] = useState<boolean>(true);
+  const [player1, setPlayer1] = useState<Player>({ name: '', emoji: '😏' })
+  const [player2, setPlayer2] = useState<Player>({ name: '', emoji: '🙈' })
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
   return (
     <PlayersContext.Provider
       value={{

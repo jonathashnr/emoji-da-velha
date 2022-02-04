@@ -1,106 +1,129 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { PlayersContext } from '../App';
 import GameStyles from './styles/Game.styled';
-
-export interface Points {
+import checkGameResult from '../CheckGameResult';
+export interface Board {
     p1: number;
     p2: number;
+    d: number;
 }
 const GAME_ARR = [
-    1, 0, 0,
-    0, 2, 0,
+    0, 0, 0,
+    0, 0, 0,
     0, 0, 0
 ];
+
 const Game = () => {
-    const {
-        player1,
-        player2,
-        setPlayer1,
-        setPlayer2,
-    } = useContext(PlayersContext)
+    const { player1, player2 } = useContext(PlayersContext)
     const [isGameHalted, setIsGameHalted] = useState<boolean>(false);
-    const [points, setPoints] = useState<Points>({ p1: 0, p2: 0 })
     const [gameArr, setGameArr] = useState(GAME_ARR);
-    const [isP1Turn, setIsP1Turn] = useState<boolean>(true);
+    const [gameView, setGameView] = useState(createGameView());
+    const [isP1Turn, setIsP1Turn] = useState<boolean>(false);
+    const scoreBoard = useRef<Board>({ p1: 0, p2: 0, d: 0 })
+    const hasP1started = useRef<boolean>(true);
+
     useEffect(() => {
-
-    }, [gameArr]);
-
-    const handleCelClick = (event: React.MouseEvent) => {
-        const cel = parseInt(event.currentTarget.id);
-        if (!gameArr[cel] || gameArr[cel] > 2) {
-            const newArr = [...gameArr];
-            newArr[cel] = isP1Turn ? 1 : 2;
-            setGameArr(newArr);
+        setGameView(createGameView());
+        const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr);
+        if (hasFinished) {
+            setIsGameHalted(true);
+            if (!isDraw) {
+                setGameView(createVictoryView(winnerArr));
+                isP1Turn ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
+            } else {
+                setGameView(createDrawView());
+                scoreBoard.current.d++;
+            }
+            matchRestart();
+        } else {
             setIsP1Turn(!isP1Turn);
         }
-    }
-    const handleCelMouseIn = (event: React.MouseEvent) => {
-        const cel = parseInt(event.currentTarget.id);
-        if (!gameArr[cel]) {
-            const newArr = [...gameArr];
-            newArr[cel] = isP1Turn ? 3 : 4;
-            setGameArr(newArr);
-        }
-    }
-    const handleCelMouseOut = (event: React.MouseEvent) => {
-        const cel = parseInt(event.currentTarget.id);
-        if (gameArr[cel] > 2) {
-            const newArr = [...gameArr];
-            newArr[cel] = 0;
-            setGameArr(newArr);
-        };
-    }
-    const checkWin = (arr: number[]) => {
-        const rowIndexes = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
-        const columnIndexes = [[0, 3, 6], [1, 4, 7], [2, 5, 8]];
-        const diagonalIndexes = [[0, 4, 8], [2, 4, 6]];
+    }, [gameArr]);
 
-        const checkIndexes = (indexes: number[][]) => {
-            return indexes.reduce(
-                (control, [i0, i1, i2]) =>
-                    arr[i0] && arr[i0] === arr[i1] && arr[i1] === arr[i2] ? true : control
-                , false);
-        }
-        return checkIndexes(rowIndexes) || checkIndexes(columnIndexes) || checkIndexes(diagonalIndexes);
+    function createGameView() {
+        return gameArr.map((value, i) => {
+            return {
+                key: `cel${i + 1}`,
+                emoji: value === 1 ? player1.emoji : value === 2 ? player2.emoji : '',
+                className: '',
+                style: {},
+                index: i,
+            }
+        })
     }
-    const renderCel = (cel: number, i: number) => {
-        switch (cel) {
-            case 1:
-                return <div onClick={handleCelClick} key={i} id={i.toString()}><span>{player1.emoji}</span></div>
-            case 2:
-                return <div onClick={handleCelClick} key={i} id={i.toString()}><span>{player2.emoji}</span></div>
-            case 3:
-                return <div onMouseLeave={handleCelMouseOut} onClick={handleCelClick} key={i} id={i.toString()}><span style={{ opacity: '0.4' }}>{player1.emoji}</span></div>
-            case 4:
-                return <div onMouseLeave={handleCelMouseOut} onClick={handleCelClick} key={i} id={i.toString()}><span style={{ opacity: '0.4' }}>{player2.emoji}</span></div>
-            case 0:
-            default:
-                return <div onMouseOver={handleCelMouseIn} onClick={handleCelClick} key={i} id={i.toString()}></div>
+
+    const matchRestart = () => {
+        setTimeout(() => {
+            setGameArr(GAME_ARR);
+            setIsGameHalted(false);
+            hasP1started.current = !hasP1started.current
+            setIsP1Turn(hasP1started.current);
+        },2000)
+    }
+
+    const createHoverGameView = (hoverIdx: number, styles: object) => {
+        const phamtomEmoji = isP1Turn ? player1.emoji : player2.emoji;
+        return gameView.map((cel, i) => {
+            return hoverIdx != i ? cel : { ...cel, emoji: phamtomEmoji, style: styles }
+        })
+    }
+    const createVictoryView = ([i1, i2, i3]: number[]) => {
+        return createGameView().map((cel, i) => {
+            return i === i1 ||
+                i === i2 ||
+                i === i3 ?
+                { ...cel, className: 'pulsar' }
+                : { ...cel, style: { opacity: '0.3' } }
+        })
+    }
+    const createDrawView = () => {
+        return createGameView().map((cel) => ({ ...cel, className: 'pulsar',style: { opacity: '0.3' }}))
+    }
+    
+    const handleCelClick = (index: number) => {
+        if (!gameArr[index]) {
+            const newArr = [...gameArr];
+            newArr[index] = isP1Turn ? 1 : 2;
+            setGameArr(newArr);
+        }
+    }
+    const handleCelMouseIn = (index: number) => {
+        if (!gameArr[index]) {
+            setGameView(createHoverGameView(index, { opacity: '0.6' }));
+        }
+    }
+    const handleCelMouseOut = (index: number) => {
+        if (!gameArr[index]) {
+            setGameView(createGameView());
         }
     }
 
     return (
         <GameStyles>
             <header>
-                <div id='ph1' className='playerHeader'>
+                <div id='ph1' className='playerHeader' style={isGameHalted ? {} : isP1Turn ? {} : {opacity: '0.2'}}>
                     <span className='headerEmoji'>{player1.emoji}</span>
-                    <div className='headerPlayerWrapper'>
-                        <div>{player1.name}</div>
-                        <div>{`Points ${points.p1}`}</div>
-                    </div>
+                    <p className='pName'>{player1.name}</p>
                 </div>
-                <div id='ph2' className='playerHeader'>
-                    <div className='headerPlayerWrapper'>
-                        <div>{player2.name}</div>
-                        <div>{`Points ${points.p2}`}</div>
-                    </div>
+                <span>VS</span>
+                <div id='ph2' className='playerHeader' style={isGameHalted ? {} : isP1Turn ? { opacity: '0.2' } : {}}>
+                    <div className='pName'>{player2.name}</div>
                     <span className='headerEmoji'>{player2.emoji}</span>
                 </div>
             </header>
             <div id='game'>
-                {gameArr.map((cel,i) => renderCel(cel,i))}
+                {gameView.map(cel =>
+                    <div
+                        key={cel.key}
+                        onClick={isGameHalted ? undefined: e => handleCelClick(cel.index)}
+                        onMouseOver={isGameHalted ? undefined : e => handleCelMouseIn(cel.index)}
+                        onMouseLeave={isGameHalted ? undefined : e => handleCelMouseOut(cel.index)}
+                    >
+                        <span className={cel.className} style={cel.style}>{cel.emoji}</span>
+                    </div>
+                )}
             </div>
+            <span id='scoreBoard'>{scoreBoard.current.p1} - {scoreBoard.current.d} - {scoreBoard.current.p2}</span>
         </GameStyles>
     );
 };

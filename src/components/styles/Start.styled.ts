@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const StartStyled = styled.header`
+const StartStyled = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;

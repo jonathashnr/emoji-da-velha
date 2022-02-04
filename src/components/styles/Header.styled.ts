@@ -6,7 +6,7 @@ const HeaderStyles = styled.header`
         font-weight: 400;
         font-size: 3rem;
         color: #d33e3e;
-        margin: 1.5rem 0;
+        margin: 3rem 0;
     }
 
 `
