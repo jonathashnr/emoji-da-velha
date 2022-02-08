@@ -2,6 +2,7 @@ import { useContext, useState, useRef } from 'react';
 import { PlayersContext } from '../App';
 import GameStyles from './styles/Game.styled';
 import checkGameResult from '../CheckGameResult';
+import Scoreboard from './Scoreboard';
 export interface Board {
     p1: number;
     p2: number;
@@ -50,7 +51,7 @@ const Game = () => {
         }, 2000)
     }
 
-    // Render Helpers
+    // Rendering Helpers
     function prepareGameView() {
         return gameArr.current.map((value, i) => {
             return {
@@ -103,6 +104,12 @@ const Game = () => {
 
     return (
         <GameStyles>
+            <Scoreboard
+                p1emoji={player1.emoji}
+                p2emoji={player2.emoji}
+                isGameHalted={isGameHalted.current}
+                isP1Turn={isP1Turn.current}
+            />
             <header>
                 <div id='ph1' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn.current ? {} : {opacity: '0.2'}}>
                     <span className='headerEmoji'>{player1.emoji}</span>

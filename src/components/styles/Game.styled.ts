@@ -78,7 +78,7 @@ header {
   opacity: 0.3;
 }
 .opctHalf {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 @keyframes pulsar {
   from {
