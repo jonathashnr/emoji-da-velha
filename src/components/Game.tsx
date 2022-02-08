@@ -15,7 +15,7 @@ const GAME_ARR = [
 
 const Game = () => {
     const { player1, player2 } = useContext(PlayersContext)
-    const [isGameHalted, setIsGameHalted] = useState<boolean>(false);
+    const isGameHalted = useRef<boolean>(false);
     const [gameArr, setGameArr] = useState(GAME_ARR);
     const [gameView, setGameView] = useState(createGameView());
     const [isP1Turn, setIsP1Turn] = useState<boolean>(false);
@@ -26,7 +26,7 @@ const Game = () => {
         setGameView(createGameView());
         const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr);
         if (hasFinished) {
-            setIsGameHalted(true);
+            isGameHalted.current = true;
             if (!isDraw) {
                 setGameView(createVictoryView(winnerArr));
                 isP1Turn ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
@@ -55,7 +55,7 @@ const Game = () => {
     const matchRestart = () => {
         setTimeout(() => {
             setGameArr(GAME_ARR);
-            setIsGameHalted(false);
+            isGameHalted.current = false;
             hasP1started.current = !hasP1started.current
             setIsP1Turn(hasP1started.current);
         },2000)
@@ -101,12 +101,12 @@ const Game = () => {
     return (
         <GameStyles>
             <header>
-                <div id='ph1' className='playerHeader' style={isGameHalted ? {} : isP1Turn ? {} : {opacity: '0.2'}}>
+                <div id='ph1' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn ? {} : {opacity: '0.2'}}>
                     <span className='headerEmoji'>{player1.emoji}</span>
                     <p className='pName'>{player1.name}</p>
                 </div>
                 <span>VS</span>
-                <div id='ph2' className='playerHeader' style={isGameHalted ? {} : isP1Turn ? { opacity: '0.2' } : {}}>
+                <div id='ph2' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn ? { opacity: '0.2' } : {}}>
                     <div className='pName'>{player2.name}</div>
                     <span className='headerEmoji'>{player2.emoji}</span>
                 </div>
@@ -115,9 +115,9 @@ const Game = () => {
                 {gameView.map(cel =>
                     <div
                         key={cel.key}
-                        onClick={isGameHalted ? undefined: e => handleCelClick(cel.index)}
-                        onMouseOver={isGameHalted ? undefined : e => handleCelMouseIn(cel.index)}
-                        onMouseLeave={isGameHalted ? undefined : e => handleCelMouseOut(cel.index)}
+                        onClick={isGameHalted.current ? undefined: e => handleCelClick(cel.index)}
+                        onMouseOver={isGameHalted.current ? undefined : e => handleCelMouseIn(cel.index)}
+                        onMouseLeave={isGameHalted.current ? undefined : e => handleCelMouseOut(cel.index)}
                     >
                         <span className={cel.className} style={cel.style}>{cel.emoji}</span>
                     </div>
