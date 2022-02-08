@@ -18,25 +18,25 @@ const Game = () => {
     const isGameHalted = useRef<boolean>(false);
     const [gameArr, setGameArr] = useState(GAME_ARR);
     const [gameView, setGameView] = useState(createGameView());
-    const [isP1Turn, setIsP1Turn] = useState<boolean>(false);
+    const isP1Turn = useRef<boolean>(false);
     const scoreBoard = useRef<Board>({ p1: 0, p2: 0, d: 0 })
-    const hasP1started = useRef<boolean>(true);
+    const hasP1started = useRef<boolean>(false);
 
     useEffect(() => {
-        setGameView(createGameView());
         const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr);
         if (hasFinished) {
             isGameHalted.current = true;
             if (!isDraw) {
                 setGameView(createVictoryView(winnerArr));
-                isP1Turn ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
+                isP1Turn.current ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
             } else {
                 setGameView(createDrawView());
                 scoreBoard.current.d++;
             }
             matchRestart();
         } else {
-            setIsP1Turn(!isP1Turn);
+            isP1Turn.current = !isP1Turn.current;
+            setGameView(createGameView());
         }
     }, [gameArr]);
 
@@ -57,12 +57,12 @@ const Game = () => {
             setGameArr(GAME_ARR);
             isGameHalted.current = false;
             hasP1started.current = !hasP1started.current
-            setIsP1Turn(hasP1started.current);
+            isP1Turn.current = hasP1started.current;
         },2000)
     }
 
     const createHoverGameView = (hoverIdx: number, styles: object) => {
-        const phamtomEmoji = isP1Turn ? player1.emoji : player2.emoji;
+        const phamtomEmoji = isP1Turn.current ? player1.emoji : player2.emoji;
         return gameView.map((cel, i) => {
             return hoverIdx !== i ? cel : { ...cel, emoji: phamtomEmoji, style: styles }
         })
@@ -83,7 +83,7 @@ const Game = () => {
     const handleCelClick = (index: number) => {
         if (!gameArr[index]) {
             const newArr = [...gameArr];
-            newArr[index] = isP1Turn ? 1 : 2;
+            newArr[index] = isP1Turn.current ? 1 : 2;
             setGameArr(newArr);
         }
     }
@@ -101,12 +101,12 @@ const Game = () => {
     return (
         <GameStyles>
             <header>
-                <div id='ph1' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn ? {} : {opacity: '0.2'}}>
+                <div id='ph1' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn.current ? {} : {opacity: '0.2'}}>
                     <span className='headerEmoji'>{player1.emoji}</span>
                     <p className='pName'>{player1.name}</p>
                 </div>
                 <span>VS</span>
-                <div id='ph2' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn ? { opacity: '0.2' } : {}}>
+                <div id='ph2' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn.current ? { opacity: '0.2' } : {}}>
                     <div className='pName'>{player2.name}</div>
                     <span className='headerEmoji'>{player2.emoji}</span>
                 </div>
