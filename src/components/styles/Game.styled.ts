@@ -74,6 +74,12 @@ header {
 .pulsar {
 	animation: pulsar 1.5s ease-in-out;
 }
+.opctLow {
+  opacity: 0.3;
+}
+.opctHalf {
+  opacity: 0.5;
+}
 @keyframes pulsar {
   from {
     transform: scale(1);

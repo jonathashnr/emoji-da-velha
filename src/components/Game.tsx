@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { PlayersContext } from '../App';
 import GameStyles from './styles/Game.styled';
 import checkGameResult from '../CheckGameResult';
@@ -14,34 +14,45 @@ const GAME_ARR = [
 ];
 
 const Game = () => {
-    const { player1, player2 } = useContext(PlayersContext)
-    const isGameHalted = useRef<boolean>(false);
-    const [gameArr, setGameArr] = useState(GAME_ARR);
-    const [gameView, setGameView] = useState(createGameView());
-    const isP1Turn = useRef<boolean>(false);
+    const { player1, player2 } = useContext(PlayersContext);
+    const gameArr = useRef(GAME_ARR);
     const scoreBoard = useRef<Board>({ p1: 0, p2: 0, d: 0 })
-    const hasP1started = useRef<boolean>(false);
+    const hasP1started = useRef<boolean>(true);
+    const isP1Turn = useRef<boolean>(true);
+    const isGameHalted = useRef<boolean>(false);
+    const [gameView, setGameView] = useState(prepareGameView());
 
-    useEffect(() => {
-        const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr);
+    // Game Flow and Logic
+    const doAfterEachTurn = () => {
+        const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr.current);
         if (hasFinished) {
             isGameHalted.current = true;
-            if (!isDraw) {
-                setGameView(createVictoryView(winnerArr));
-                isP1Turn.current ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
-            } else {
-                setGameView(createDrawView());
+            if (isDraw) {
                 scoreBoard.current.d++;
+                setGameView(prepareDrawView());
+            } else {
+                isP1Turn.current ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
+                setGameView(prepareVictoryView(winnerArr));
             }
-            matchRestart();
+            doMatchRestart();
         } else {
             isP1Turn.current = !isP1Turn.current;
-            setGameView(createGameView());
+            setGameView(prepareGameView());
         }
-    }, [gameArr]);
+    }
+    const doMatchRestart = () => {
+        setTimeout(() => {
+            gameArr.current = [...GAME_ARR];
+            isGameHalted.current = false;
+            hasP1started.current = !hasP1started.current
+            isP1Turn.current = hasP1started.current;
+            setGameView(prepareGameView());
+        }, 2000)
+    }
 
-    function createGameView() {
-        return gameArr.map((value, i) => {
+    // Render Helpers
+    function prepareGameView() {
+        return gameArr.current.map((value, i) => {
             return {
                 key: `cel${i + 1}`,
                 emoji: value === 1 ? player1.emoji : value === 2 ? player2.emoji : '',
@@ -51,50 +62,42 @@ const Game = () => {
             }
         })
     }
-
-    const matchRestart = () => {
-        setTimeout(() => {
-            setGameArr(GAME_ARR);
-            isGameHalted.current = false;
-            hasP1started.current = !hasP1started.current
-            isP1Turn.current = hasP1started.current;
-        },2000)
-    }
-
-    const createHoverGameView = (hoverIdx: number, styles: object) => {
+    const prepareHoverView = (hoverIdx: number) => {
         const phamtomEmoji = isP1Turn.current ? player1.emoji : player2.emoji;
         return gameView.map((cel, i) => {
-            return hoverIdx !== i ? cel : { ...cel, emoji: phamtomEmoji, style: styles }
+            return hoverIdx !== i ? cel : { ...cel, emoji: phamtomEmoji, className: 'opctHalf' }
         })
     }
-    const createVictoryView = ([i1, i2, i3]: number[]) => {
-        return createGameView().map((cel, i) => {
+    const prepareVictoryView = ([i1, i2, i3]: number[]) => {
+        return prepareGameView().map((cel, i) => {
             return i === i1 ||
                 i === i2 ||
                 i === i3 ?
                 { ...cel, className: 'pulsar' }
-                : { ...cel, style: { opacity: '0.3' } }
+                : { ...cel, className: 'opctLow' }
         })
     }
-    const createDrawView = () => {
-        return createGameView().map((cel) => ({ ...cel, className: 'pulsar',style: { opacity: '0.3' }}))
+    const prepareDrawView = () => {
+        return prepareGameView().map((cel) => ({ ...cel, className: 'pulsar opctLow' }))
     }
 
+    // Event handlers
     const handleCelClick = (index: number) => {
-        if (!gameArr[index]) {
-            const newArr = [...gameArr];
+        if (!gameArr.current[index]) {
+            const newArr = [...gameArr.current];
             newArr[index] = isP1Turn.current ? 1 : 2;
-            setGameArr(newArr);
+            gameArr.current = newArr;
+            doAfterEachTurn();
         }
     }
     const handleCelMouseIn = (index: number) => {
-        if (!gameArr[index]) {
-            setGameView(createHoverGameView(index, { opacity: '0.6' }));
+        if (!gameArr.current[index]) {
+            setGameView(prepareHoverView(index));
         }
     }
     const handleCelMouseOut = (index: number) => {
-        if (!gameArr[index]) {
-            setGameView(createGameView());
+        if (!gameArr.current[index]) {
+            setGameView(prepareGameView());
         }
     }
 
