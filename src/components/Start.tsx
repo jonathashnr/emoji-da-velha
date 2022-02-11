@@ -1,7 +1,6 @@
 import React, { useContext, useState, useRef } from 'react';
 import StartStyled from './styles/Start.styled';
 import Header from './Header';
-import InputsWrapper from './InputsWrapper';
 import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Picker } from 'emoji-mart'
 import { PlayersContext } from '../App'
@@ -28,6 +27,7 @@ const Start: React.FC = () => {
         setShowPicker(false);
     }
     const onEmojiClick = (event: React.MouseEvent) => {
+        event.preventDefault();
         lastClickedID.current = event.currentTarget.id;
         setShowPicker(true)
     }
@@ -57,18 +57,19 @@ const Start: React.FC = () => {
         <StartStyled>
             <Header />
             <form id="forms">
-                <InputsWrapper
-                    id='1'
-                    onEmojiClick={onEmojiClick}
-                    player={player1}
-                    setPlayer={setPlayer1}
-                />
-                <InputsWrapper
-                    id='2'
-                    onEmojiClick={onEmojiClick}
-                    player={player2}
-                    setPlayer={setPlayer2}
-                />
+                <div className='emojisWrapper'>
+                    <button
+                        id='1'
+                        className='emojiButton'
+                        onClick={onEmojiClick}
+                    >{player1.emoji}</button>
+                    <span>versus</span>
+                    <button
+                        id='2'
+                        className='emojiButton'
+                        onClick={onEmojiClick}
+                    >{player2.emoji}</button>
+                </div>
                 <button onClick={handleSubmit} type='submit'>Começar</button>
             </form>
             {showPicker && <div
@@ -81,3 +82,16 @@ const Start: React.FC = () => {
 };
 
 export default Start;
+
+                // <InputsWrapper
+                //     id='1'
+                //     onEmojiClick={onEmojiClick}
+                //     player={player1}
+                //     setPlayer={setPlayer1}
+                // />
+                // <InputsWrapper
+                //     id='2'
+                //     onEmojiClick={onEmojiClick}
+                //     player={player2}
+                //     setPlayer={setPlayer2}
+                // />

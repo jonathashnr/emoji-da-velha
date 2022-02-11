@@ -12,7 +12,24 @@ const StartStyled = styled.div`
         margin: 1rem;
         display: flex;
         flex-direction: column;
-
+        .emojisWrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        .emojiButton {
+            font-size: 3rem;
+            width: 5rem;
+            height: 5rem;
+            padding: 0
+        }
+        span {
+            font-family: 'Bangers', cursive;
+            font-weight: 400;
+            font-size: 2rem;
+            color: #72376e;
+        }
         button {
             padding: 0.4rem;
             font-size: 1.2rem;

@@ -27,23 +27,25 @@ const Game = () => {
     const doAfterEachTurn = () => {
         const [hasFinished, isDraw, winnerArr] = checkGameResult(gameArr.current);
         if (hasFinished) {
+            let newScoreBoard = { ...scoreBoard.current }
             isGameHalted.current = true;
             if (isDraw) {
-                scoreBoard.current.d++;
+                newScoreBoard.d++;
                 setGameView(prepareDrawView());
             } else {
-                isP1Turn.current ? scoreBoard.current.p1++ : scoreBoard.current.p2++;
+                isP1Turn.current ? newScoreBoard.p1++ : newScoreBoard.p2++;
                 setGameView(prepareVictoryView(winnerArr));
             }
-            doMatchRestart();
+            doMatchRestart(newScoreBoard);
         } else {
             isP1Turn.current = !isP1Turn.current;
             setGameView(prepareGameView());
         }
     }
-    const doMatchRestart = () => {
+    const doMatchRestart = (scores: Board) => {
         setTimeout(() => {
             gameArr.current = [...GAME_ARR];
+            scoreBoard.current = scores;
             isGameHalted.current = false;
             hasP1started.current = !hasP1started.current
             isP1Turn.current = hasP1started.current;
@@ -109,18 +111,8 @@ const Game = () => {
                 p2emoji={player2.emoji}
                 isGameHalted={isGameHalted.current}
                 isP1Turn={isP1Turn.current}
+                scoreBoard={{...scoreBoard.current}}
             />
-            <header>
-                <div id='ph1' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn.current ? {} : {opacity: '0.2'}}>
-                    <span className='headerEmoji'>{player1.emoji}</span>
-                    <p className='pName'>{player1.name}</p>
-                </div>
-                <span>VS</span>
-                <div id='ph2' className='playerHeader' style={isGameHalted.current ? {} : isP1Turn.current ? { opacity: '0.2' } : {}}>
-                    <div className='pName'>{player2.name}</div>
-                    <span className='headerEmoji'>{player2.emoji}</span>
-                </div>
-            </header>
             <div id='game'>
                 {gameView.map(cel =>
                     <div
@@ -133,7 +125,6 @@ const Game = () => {
                     </div>
                 )}
             </div>
-            <span id='scoreBoard'>{scoreBoard.current.p1} - {scoreBoard.current.d} - {scoreBoard.current.p2}</span>
         </GameStyles>
     );
 };

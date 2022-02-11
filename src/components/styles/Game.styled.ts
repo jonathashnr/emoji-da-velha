@@ -6,34 +6,6 @@ min-width: 20rem;
 display: flex;
 flex-direction: column;
 align-items: center;
-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 3rem;
-  font-family: 'Bangers', cursive;
-  font-size: 1.5rem;
-  color: #d33e3e;
-  .playerHeader {
-    display: flex;
-    width: 100%;
-    .headerEmoji {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2.5rem;
-      margin: 0.5rem;
-     }
-    .pName {
-      display: flex;
-      align-items: center;
-    }
-  }
-  span {
-    font-size: 3rem;
-    color: #72376e;
-  }
-}
 #ph2 {
   justify-content: flex-end;
   div {
@@ -64,12 +36,6 @@ header {
             font-size: 3.5rem;
         }
     }
-}
-#scoreBoard {
-  margin: 3rem;
-  font-family: 'Bangers', cursive;
-  font-size: 3rem;
-  color: #d33e3e;
 }
 .pulsar {
 	animation: pulsar 1.5s ease-in-out;
