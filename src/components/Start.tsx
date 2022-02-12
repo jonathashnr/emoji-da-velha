@@ -8,10 +8,10 @@ import { PlayersContext } from '../App'
 
 const Start: React.FC = () => {
     const {
-        player1,
-        player2,
-        setPlayer1,
-        setPlayer2,
+        emoji1,
+        emoji2,
+        setEmoji1,
+        setEmoji2,
         setHasStarted
     } = useContext(PlayersContext)
     const [showPicker, setShowPicker] = useState<boolean>(false);
@@ -19,10 +19,10 @@ const Start: React.FC = () => {
     const lastClickedID = useRef<string>('');
 
     const onEmojiSelect = ({ native: emoji }: BaseEmoji) => {
-        if (lastClickedID.current === '1') {
-            setPlayer1({ ...player1, emoji });
-        } else if (lastClickedID.current === '2') {
-            setPlayer2({ ...player1, emoji });
+        if (lastClickedID.current === 'emo1button') {
+            setEmoji1(emoji);
+        } else if (lastClickedID.current === 'emo2button') {
+            setEmoji2(emoji);
         }
         setShowPicker(false);
     }
@@ -38,18 +38,6 @@ const Start: React.FC = () => {
     }
     const handleSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        const p1length = player1.name.length;
-        const p2length = player1.name.length;
-        if (p1length === 0) {
-            setPlayer1({ ...player1, name: "Jogador 1" });
-        } else if (p1length > 10) {
-            setPlayer1({ ...player1, name: player1.name.slice(0,9).concat('...') });
-        }
-        if (p2length === 0) {
-            setPlayer2({ ...player2, name: "Jogador 2" });
-        } else if (p2length > 10) {
-            setPlayer2({ ...player2, name: player2.name.slice(0, 9).concat('...') });
-        }
         setHasStarted(true);
     }
     
@@ -59,16 +47,16 @@ const Start: React.FC = () => {
             <form id="forms">
                 <div className='emojisWrapper'>
                     <button
-                        id='1'
+                        id='emo1button'
                         className='emojiButton'
                         onClick={onEmojiClick}
-                    >{player1.emoji}</button>
+                    >{emoji1}</button>
                     <span>versus</span>
                     <button
-                        id='2'
+                        id='emo2button'
                         className='emojiButton'
                         onClick={onEmojiClick}
-                    >{player2.emoji}</button>
+                    >{emoji2}</button>
                 </div>
                 <button onClick={handleSubmit} type='submit'>Começar</button>
             </form>
@@ -82,16 +70,3 @@ const Start: React.FC = () => {
 };
 
 export default Start;
-
-                // <InputsWrapper
-                //     id='1'
-                //     onEmojiClick={onEmojiClick}
-                //     player={player1}
-                //     setPlayer={setPlayer1}
-                // />
-                // <InputsWrapper
-                //     id='2'
-                //     onEmojiClick={onEmojiClick}
-                //     player={player2}
-                //     setPlayer={setPlayer2}
-                // />

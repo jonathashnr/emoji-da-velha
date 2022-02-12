@@ -15,7 +15,7 @@ const GAME_ARR = [
 ];
 
 const Game = () => {
-    const { player1, player2 } = useContext(PlayersContext);
+    const { emoji1, emoji2 } = useContext(PlayersContext);
     const gameArr = useRef(GAME_ARR);
     const scoreBoard = useRef<Board>({ p1: 0, p2: 0, d: 0 })
     const hasP1started = useRef<boolean>(true);
@@ -58,7 +58,7 @@ const Game = () => {
         return gameArr.current.map((value, i) => {
             return {
                 key: `cel${i + 1}`,
-                emoji: value === 1 ? player1.emoji : value === 2 ? player2.emoji : '',
+                emoji: value === 1 ? emoji1 : value === 2 ? emoji2 : '',
                 className: '',
                 style: {},
                 index: i,
@@ -66,7 +66,7 @@ const Game = () => {
         })
     }
     const prepareHoverView = (hoverIdx: number) => {
-        const phamtomEmoji = isP1Turn.current ? player1.emoji : player2.emoji;
+        const phamtomEmoji = isP1Turn.current ? emoji1 : emoji2;
         return gameView.map((cel, i) => {
             return hoverIdx !== i ? cel : { ...cel, emoji: phamtomEmoji, className: 'opctHalf' }
         })
@@ -107,8 +107,8 @@ const Game = () => {
     return (
         <GameStyles>
             <Scoreboard
-                p1emoji={player1.emoji}
-                p2emoji={player2.emoji}
+                p1emoji={emoji1}
+                p2emoji={emoji2}
                 isGameHalted={isGameHalted.current}
                 isP1Turn={isP1Turn.current}
                 scoreBoard={{...scoreBoard.current}}
