@@ -4,14 +4,15 @@ const ScoreboardStyles = styled.header`
 
 font-family: 'Bangers', cursive;
 font-weight: 400;
-font-size: 2.5rem;
+font-size: 3rem;
 margin-bottom: 3rem;
 display: flex;
 justify-content: center;
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 4rem);
+  grid-template-columns: repeat(3, 5rem);
+  grid-auto-rows: 5rem;
   grid-column-gap: 1.5rem;
   span {
     display: flex;
@@ -20,14 +21,12 @@ justify-content: center;
     color: #d33e3e;
   }
   .pointer {
-    font-size: 1.5rem;
-    height: 3rem;
+    font-size: 2rem;
     animation: shake 3s cubic-bezier(0.455, 0.030, 0.515, 0.955) infinite both;
   }
   .emojiBoard {
     border-width: 1.5px;
     border-style: solid;
-    height: 4rem;
     border-bottom-style: dashed;
     border-color: #72376e;
     border-radius: 10px 10px 0 0;
