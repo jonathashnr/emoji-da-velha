@@ -44,19 +44,20 @@ const Start: React.FC = () => {
     return (
         <StartStyled>
             <Header />
+            <p>Bem-vindo ao Emoji da Velha, um jogo da velha com emojis. Para jogar basta clicar no botão <strong>Começar</strong>. Você também pode <strong>trocar</strong> os emojis clicando neles.</p>
             <form id="forms">
                 <div className='emojisWrapper'>
-                    <button
+                    <div
                         id='emo1button'
                         className='emojiButton'
                         onClick={onEmojiClick}
-                    >{emoji1}</button>
+                    >{emoji1}</div>
                     <span>versus</span>
-                    <button
+                    <div
                         id='emo2button'
                         className='emojiButton'
                         onClick={onEmojiClick}
-                    >{emoji2}</button>
+                    >{emoji2}</div>
                 </div>
                 <button onClick={handleSubmit} type='submit'>Começar</button>
             </form>

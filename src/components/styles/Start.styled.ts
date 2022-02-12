@@ -6,23 +6,26 @@ const StartStyled = styled.div`
     align-items: center;
     width: 30%;
     min-width: 22rem;
+    p {
+        text-align: center;
+    }
     #forms {
-        padding: 0 1rem;
         width: 100%;
-        margin: 1rem;
         display: flex;
         flex-direction: column;
         .emojisWrapper {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            margin: 2rem 0;
+            margin: 1rem 0;
         }
         .emojiButton {
-            font-size: 3rem;
-            width: 5rem;
-            height: 5rem;
-            padding: 0
+            font-size: 5rem;
+            cursor: pointer;
+            text-shadow: rgba(0, 0, 0, 0.2) 0px 6px 16px;
+            &:hover {
+                text-shadow: rgba(0, 0, 0, 0.3) 0px 7px 18px;
+            }
         }
         span {
             font-family: 'Bangers', cursive;
@@ -31,6 +34,7 @@ const StartStyled = styled.div`
             color: #72376e;
         }
         button {
+            margin-top: 1rem;
             padding: 0.4rem;
             font-size: 1.2rem;
             font-family: 'Open Sans', sans-serif;
