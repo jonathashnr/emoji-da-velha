@@ -60,6 +60,10 @@ const StartStyled = styled.div`
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
   }
+  #github {
+    font-size: 0.7rem;
+    margin-top: 3rem;
+  }
 `;
 
 export default StartStyled;

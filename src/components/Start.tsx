@@ -67,6 +67,14 @@ function Start() {
           Começar
         </button>
       </form>
+      <a
+        id="github"
+        rel="noreferrer"
+        href="https://github.com/jonathashnr/emoji-da-velha"
+        target="_blank"
+      >
+        Github Repo
+      </a>
       {showPicker && (
         <div
           className="emoji-picker-wrapper"
