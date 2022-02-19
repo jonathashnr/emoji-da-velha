@@ -4,7 +4,8 @@ This is just a personal project for learning purposes. "Emoji da velha" is a wor
 
 Things I learned doing this:
 
-- Typescript
+- Basics of Typescript
+- Basics of Styled Components
 - React Context API
 - ESLint configs
 
