@@ -1,6 +1,6 @@
 ## Emoji da velha 👵
 
-This is just a personal project for learning purposes. "Emoji da velha" is a wordplay with how we call Tic Tac Toe in portuguese: 'Jogo da velha' (The oldwomen game). When the game comes to a "draw" we say "deu velha" (oldwoman gotcha). Thats why when the game result is a draw the 👵 emoji gets a point. You can play the demo [here](https://github.com/facebook/create-react-app).
+This is just a personal project for learning purposes. "Emoji da velha" is a wordplay with how we call TicTacToe in portuguese: 'Jogo da velha' (The oldwomen game). When the game comes to a tie we say "deu velha" (oldwoman gotcha). Thats why when the game result is a draw the 👵 emoji gets a point. You can play the demo [here](https://emoji-da-velha.netlify.app/).
 
 Things I learned doing this:
 
